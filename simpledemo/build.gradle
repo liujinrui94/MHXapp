@@ -1,0 +1,61 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "28.0.3"
+    defaultConfig {
+        applicationId "com.hyphenate.easeuisimpledemo"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    android{
+        lintOptions {
+            checkReleaseBuilds false
+            // Or, if you prefer, you can continue to check for errors in release builds,
+            // but continue the build even when errors are found:
+            abortOnError false
+        }
+
+    }
+
+    packagingOptions {//防止重复
+        pickFirst 'lib/arm64-v8a/libhyphenate.so'
+        pickFirst 'lib/armeabi-v7a/libhyphenate.so'
+        pickFirst 'lib/armeabi-v7a/libhyphenate_av_recorder.so'
+        pickFirst 'lib/armeabi-v7a/lib/armeabi-v7a/libhyphenate_av.so'
+        pickFirst 'lib/x86/libsqlite.so'
+        pickFirst 'lib/armeabi-v7a/libhyphenate_av.so'
+        pickFirst 'lib/arm64-v8a/libhyphenate_av.so'
+        pickFirst 'lib/x86/libhyphenate.so'
+        pickFirst 'lib/arm64-v8a/libsqlite.so'
+        pickFirst 'lib/armeabi-v7a/libsqlite.so'
+        pickFirst 'lib/x86/libhyphenate_av.so'
+        pickFirst 'lib/x86/libhyphenate_av_recorder.so'
+        pickFirst'lib/arm64-v8a/libhyphenate_av_recorder.so'
+
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':easeui')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+//    compile 'com.android.support:appcompat-v7:24.2.1'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    testImplementation 'junit:junit:4.12'
+//    implementation files('libs/hyphenatechat_3.5.2.jar')
+    compileOnly 'com.hyphenate:hyphenate-sdk:3.5.1'
+
+}
