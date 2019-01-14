@@ -30,19 +30,11 @@ public class DemoApplication extends Application {
 
 	@Override
 	public void onCreate() {
-		MultiDex.install(this);
 		super.onCreate();
         applicationContext = this;
         instance = this;
 
-		//init demo helper
-        DemoHelper.getInstance().init(applicationContext);
 
-        // 请确保环信SDK相关方法运行在主进程，子进程不会初始化环信SDK（该逻辑在EaseUI.java中）
-        if (EaseUI.getInstance().isMainProcess(this)) {
-			// 初始化华为 HMS 推送服务, 需要在SDK初始化后执行
-			HMSPushHelper.getInstance().initHMSAgent(instance);
-		}
 	}
 
 	public static DemoApplication getInstance() {
@@ -52,6 +44,5 @@ public class DemoApplication extends Application {
 	@Override
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
-		MultiDex.install(this);
 	}
 }
