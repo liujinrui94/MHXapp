@@ -1,11 +1,12 @@
 package com.ljr.hxapp.popuView.widget;
 
 
-import popup.popfisher.com.smartpopupwindow.promptview.widget.location.BottomCenterLocation;
-import popup.popfisher.com.smartpopupwindow.promptview.widget.location.ICalculateLocation;
-import popup.popfisher.com.smartpopupwindow.promptview.widget.location.TopCenterLocation;
-import popup.popfisher.com.smartpopupwindow.promptview.widget.location.TopLeftLocation;
-import popup.popfisher.com.smartpopupwindow.promptview.widget.location.TopRightLocation;
+import com.ljr.hxapp.popuView.widget.location.BottomCenterLocation;
+import com.ljr.hxapp.popuView.widget.location.ICalculateLocation;
+import com.ljr.hxapp.popuView.widget.location.TopCenterLocation;
+import com.ljr.hxapp.popuView.widget.location.TopLeftLocation;
+import com.ljr.hxapp.popuView.widget.location.TopRightLocation;
+
 
 /**
  * Created by chenpengfei on 2016/11/2.

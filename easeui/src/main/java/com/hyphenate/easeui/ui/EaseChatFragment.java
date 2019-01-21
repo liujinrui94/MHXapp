@@ -498,14 +498,14 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         messageList.setItemClickListener(new EaseChatMessageList.MessageListItemClickListener() {
 
             @Override
-            public void onUserAvatarClick(String username) {
+            public void onUserAvatarClick(String username,View view) {
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onAvatarClick(username);
                 }
             }
 
             @Override
-            public boolean onResendClick(final EMMessage message) {
+            public boolean onResendClick(final EMMessage message,View view) {
                 EMLog.i(TAG, "onResendClick");
                 new EaseAlertDialog(getContext(), R.string.resend, R.string.confirm_resend, null, new EaseAlertDialog.AlertDialogUser() {
                     @Override
@@ -521,14 +521,14 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             }
 
             @Override
-            public void onUserAvatarLongClick(String username) {
+            public void onUserAvatarLongClick(String username,View view) {
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onAvatarLongClick(username);
                 }
             }
 
             @Override
-            public void onBubbleLongClick(EMMessage message) {
+            public void onBubbleLongClick(EMMessage message,View view) {
                 contextMenuMessage = message;
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onMessageBubbleLongClick(message);
@@ -536,7 +536,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             }
 
             @Override
-            public boolean onBubbleClick(EMMessage message) {
+            public boolean onBubbleClick(EMMessage message,View view) {
                 if (chatFragmentHelper == null) {
                     return false;
                 }

@@ -47,7 +47,7 @@ public class PromptViewHelper {
         });
     }
 
-    private void createPrompt(final View srcView) {
+    public void createPrompt(final View srcView) {
         final View promptView = promptViewManager.getPromptView();
         if(popupWindow == null)
             popupWindow =  new PopupWindow(activity);

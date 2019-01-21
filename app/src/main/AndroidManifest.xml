@@ -84,5 +84,27 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="3ecea51f560650b1ed8a4b99808f52e8" />
+
+        <activity
+
+            android:name=".ui.activity.MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <!--外部打开app-->
+            <intent-filter>
+                <!--必有项-->
+                <action android:name="android.intent.action.VIEW" />
+                <!--表示该页面可以被隐式调用，必须加上该项-->
+                <category android:name="android.intent.category.DEFAULT" />
+                <!--BROWSABLE指定该Activity能被浏览器安全调用-->
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!--协议部分-->
+                <!--声明自定义scheme，类似于http, https-->
+                <data
+                    android:host="web"
+                    android:scheme="tld" />
+            </intent-filter>
+
+        </activity>
     </application>
 </manifest>

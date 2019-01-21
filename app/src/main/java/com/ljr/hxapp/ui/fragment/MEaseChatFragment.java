@@ -69,6 +69,9 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
 import com.ljr.hxapp.HXApplication;
+import com.ljr.hxapp.popuView.widget.ChatPromptViewManager;
+import com.ljr.hxapp.popuView.widget.Location;
+import com.ljr.hxapp.popuView.widget.PromptViewHelper;
 import com.ljr.hxapp.ui.activity.MineWebActivity;
 
 import org.json.JSONArray;
@@ -498,10 +501,14 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
     }
 
     protected void setListItemClickListener() {
+
+        final PromptViewHelper pvHelper = new PromptViewHelper(getActivity());
+        pvHelper.setPromptViewManager(new ChatPromptViewManager(getActivity(), Location.TOP_RIGHT));
+
         messageList.setItemClickListener(new EaseChatMessageList.MessageListItemClickListener() {
 
             @Override
-            public void onUserAvatarClick(String username) {
+            public void onUserAvatarClick(String username,View view) {
                 //头像点击事件
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onAvatarClick(username);
@@ -509,7 +516,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             }
 
             @Override
-            public boolean onResendClick(final EMMessage message) {
+            public boolean onResendClick(final EMMessage message,View view) {
                 //重发消息按钮点击事件
                 new EaseAlertDialog(getContext(), R.string.resend, R.string.confirm_resend, null, new EaseAlertDialog.AlertDialogUser() {
                     @Override
@@ -525,8 +532,8 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             }
 
             @Override
-            public void onUserAvatarLongClick(String username) {
-                Log.e("messageList",username);
+            public void onUserAvatarLongClick(String username,View view) {
+                pvHelper.createPrompt(view);
                 inputAtUsername(username);
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onAvatarLongClick(username);
@@ -534,9 +541,9 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             }
 
             @Override
-            public void onBubbleLongClick(EMMessage message) {
+            public void onBubbleLongClick(EMMessage message,View view) {
                 //气泡框长按事件
-                Log.e("AAAAA",message.toString());
+                pvHelper.createPrompt(view);
                 contextMenuMessage = message;
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onMessageBubbleLongClick(message);
@@ -544,7 +551,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             }
 
             @Override
-            public boolean onBubbleClick(EMMessage message) {
+            public boolean onBubbleClick(EMMessage message,View view) {
                 //气泡框点击事件，EaseUI有默认实现这个事件，如果需要覆盖，return值要返回true
                 if (chatFragmentHelper == null) {
                     return false;
@@ -555,6 +562,25 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             @Override
             public void onMessageInProgress(EMMessage message) {
                 message.setMessageStatusCallback(messageStatusCallback);
+            }
+        });
+
+        pvHelper.setOnItemClickListener(new PromptViewHelper.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String str = "";
+                switch (position) {
+                    case 0:
+                        str = "复制";
+                        break;
+                    case 1:
+                        str = "粘贴";
+                        break;
+                    case 2:
+                        str = "转发";
+                        break;
+                }
+                Toast.makeText(getContext(),  str, Toast.LENGTH_SHORT).show();
             }
         });
     }
