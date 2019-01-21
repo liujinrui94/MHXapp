@@ -1,4 +1,4 @@
-package com.hyphenate.easeui.ui;
+package com.ljr.hxapp.ui.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -51,6 +51,9 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseCompat;
 import com.hyphenate.easeui.model.EaseDingMessageHelper;
+import com.hyphenate.easeui.ui.EaseBaseFragment;
+import com.hyphenate.easeui.ui.EaseChatRoomListener;
+import com.hyphenate.easeui.ui.EaseGroupListener;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
@@ -65,22 +68,19 @@ import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.PathUtil;
+import com.ljr.hxapp.HXApplication;
+import com.ljr.hxapp.ui.activity.MineWebActivity;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * you can new an EaseChatFragment to use or you can inherit it to expand.
- * You need call setArguments to pass chatType and userId
- * <br/>
- * <br/>
- * you can see ChatActivity in demo for your reference
- */
-public class EaseChatFragment extends EaseBaseFragment implements EMMessageListener {
+public class MEaseChatFragment extends EaseBaseFragment implements EMMessageListener {
     protected static final String TAG = "EaseChatFragment";
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
@@ -211,6 +211,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         registerExtendMenuItem();
         // init input menu
         inputMenu.init(null);
+
         inputMenu.setChatInputMenuListener(new ChatInputMenuListener() {
 
             @Override
@@ -335,6 +336,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             @Override
             public void onClick(View v) {
 //                Toast.makeText(getActivity(), "个人信息", Toast.LENGTH_LONG).show();
+                MineWebActivity.MineWebActivityStart(getActivity(),"","","");
             }
         });
 
@@ -351,7 +353,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
                         @Override
                         public void run() {
                             String groupName = "%s(%s)";
-                            tv_title_bar.setText(String.format(groupName, group.getGroupName(), group.getAffiliationsCount()));
+                            tv_title_bar.setText(String.format(groupName, group.getGroupName(), group.getMemberCount()));
+                            HXApplication.getInstance().getUserAccount().setGroupName(group.getGroupName());
                         }
                     });
                 } catch (HyphenateException e) {
@@ -499,6 +502,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
             @Override
             public void onUserAvatarClick(String username) {
+                //头像点击事件
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onAvatarClick(username);
                 }
@@ -506,7 +510,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
             @Override
             public boolean onResendClick(final EMMessage message) {
-                EMLog.i(TAG, "onResendClick");
+                //重发消息按钮点击事件
                 new EaseAlertDialog(getContext(), R.string.resend, R.string.confirm_resend, null, new EaseAlertDialog.AlertDialogUser() {
                     @Override
                     public void onResult(boolean confirmed, Bundle bundle) {
@@ -522,6 +526,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
             @Override
             public void onUserAvatarLongClick(String username) {
+                Log.e("messageList",username);
+                inputAtUsername(username);
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onAvatarLongClick(username);
                 }
@@ -529,6 +535,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
             @Override
             public void onBubbleLongClick(EMMessage message) {
+                //气泡框长按事件
+                Log.e("AAAAA",message.toString());
                 contextMenuMessage = message;
                 if (chatFragmentHelper != null) {
                     chatFragmentHelper.onMessageBubbleLongClick(message);
@@ -537,6 +545,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
             @Override
             public boolean onBubbleClick(EMMessage message) {
+                //气泡框点击事件，EaseUI有默认实现这个事件，如果需要覆盖，return值要返回true
                 if (chatFragmentHelper == null) {
                     return false;
                 }
@@ -858,9 +867,16 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
                 case ITEM_LOCATION:
 //                    startActivityForResult(new Intent(getActivity(), EaseBaiduMapActivity.class), REQUEST_CODE_MAP);
 //                    sendAtMessage("");
+                    //TODO
+                    List<String> atMembers = new ArrayList<String>();
+                    atMembers.add("6001");
+                    atMembers.add("6002");
+                    JSONArray atJson = new JSONArray(atMembers);
+                    // 设置消息的扩展为@群成员类型
                     EMMessage message = EMMessage.createTxtSendMessage("1", toChatUsername);
-                    message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);
-
+//                    message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);
+                    message.setAttribute("em_at_list", atJson); // @6001,6002
+                    Log.e("AAAA","AAAAAA");
                     break;
 
                 default:

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="用户名"
-        android:text="q7452311"
+        android:text="q123456"
         android:layout_marginTop="20dp"
         />
 
