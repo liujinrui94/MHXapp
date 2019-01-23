@@ -8,16 +8,20 @@ import android.view.View;
  */
 public class ChatPromptViewManager extends PromptViewHelper.PromptViewManager {
 
+    private String[] strings;
+
     public ChatPromptViewManager(Activity activity, String[] dataArray, Location location) {
         super(activity, dataArray, location);
     }
 
-    public ChatPromptViewManager(Activity activity) {
-        this(activity, new String[]{"复制", "粘贴", "转发"}, Location.TOP_LEFT);
+    public ChatPromptViewManager(Activity activity, String[] strings) {
+        this(activity, strings, Location.TOP_RIGHT);
+        this.strings=strings;
     }
 
     public ChatPromptViewManager(Activity activity, Location location) {
         this(activity, new String[]{"复制", "粘贴", "转发"}, location);
+
     }
 
 
@@ -28,13 +32,13 @@ public class ChatPromptViewManager extends PromptViewHelper.PromptViewManager {
 
     @Override
     public void bindData(View view, String[] dataArray) {
-        if(view instanceof PromptView) {
+        if (view instanceof PromptView) {
             PromptView promptView = (PromptView) view;
             promptView.setContentArray(dataArray);
             promptView.setOnItemClickListener(new PromptView.OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
-                    if(onItemClickListener != null) onItemClickListener.onItemClick(position);
+                    if (onItemClickListener != null) onItemClickListener.onItemClick(position,strings[position]);
                 }
             });
         }

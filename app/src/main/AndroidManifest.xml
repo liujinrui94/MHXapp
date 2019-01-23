@@ -27,7 +27,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.WebViewActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,11 +37,15 @@
         </activity>
 
         <activity android:name=".ui.activity.MineWebActivity"
-            android:screenOrientation="portrait"></activity>
+        android:launchMode="singleTask"
+        android:screenOrientation="portrait"></activity>
 
+        <activity android:name=".ui.activity.WebActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.ChatActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"

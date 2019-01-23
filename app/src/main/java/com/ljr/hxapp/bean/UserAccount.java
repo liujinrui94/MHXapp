@@ -9,15 +9,34 @@ import java.io.Serializable;
  */
 public class UserAccount implements Serializable {
 
-    private String  huanxinId;//环信的账号；
-    private String   huanxinPassword;//环信的密码；
-    private String   nickname;//用户昵称；
-    private String   userImg;//用户头像；
-    private String   groupId;//群组Id；
-    private String   userType;//用户类型（1会员，0管理员，-1超级管理员）； 
-    private String userAccount,password;
-    private String groupName;
+    private String huanxinId;//环信的账号；
+    private String huanxinPassword;//环信的密码；
+    private String nickname;//用户昵称；
+    private String userImg;//用户头像；
+    private String groupId;//群组Id；
+    private String userType;//用户类型（1会员，0管理员，-1超级管理员）； 
+    private String userAccount, password;
+    private String userId;//:用户的Id
 
+    private String groupName;
+    private boolean isLogin;//是否登陆
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public boolean isLogin() {
+        return isLogin;
+    }
+
+    public void setLogin(boolean login) {
+        isLogin = login;
+    }
 
     public String getGroupName() {
         return groupName;

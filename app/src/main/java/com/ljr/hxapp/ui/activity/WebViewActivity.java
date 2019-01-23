@@ -137,34 +137,10 @@ public class WebViewActivity extends BaseActivity implements JsToAndroid.JsData 
 
     @Override
     public void Into(String message) {
-        Log.e("AAAA",message);
         final UserAccount userAccount= GsonUtil.GsonToBean(message,UserAccount.class);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //login
-                EMClient.getInstance().login(userAccount.getHuanxinId(), userAccount.getHuanxinPassword(), new EMCallBack() {
-
-                    @Override
-                    public void onSuccess() {
-                        HXApplication.getInstance().setUserAccount(userAccount);
-                        startActivity(new Intent(WebViewActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
-                        finish();
-                    }
-
-                    @Override
-                    public void onProgress(int progress, String status) {
-
-                    }
-
-                    @Override
-                    public void onError(int code, String error) {
-                        Log.e("WebViewActivity",error);
-                    }
-                });
-            }
-        });
-
+        userAccount.setLogin(true);
+        HXApplication.getInstance().setUserAccount(userAccount);
+        startActivity(new Intent(WebViewActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
+        finish();
     }
 }

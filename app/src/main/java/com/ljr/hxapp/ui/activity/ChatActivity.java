@@ -8,10 +8,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.util.EasyUtils;
+import com.ljr.hxapp.HXApplication;
 import com.ljr.hxapp.R;
 import com.ljr.hxapp.base.EaseBaseActivity;
 import com.ljr.hxapp.ui.fragment.MEaseChatFragment;
@@ -50,16 +54,45 @@ public class ChatActivity extends EaseBaseActivity {
 //                }
 //            }
 //        }
-        activityInstance = this;
-        //user or group id
         toChatUsername = getIntent().getExtras().getString(EaseConstant.EXTRA_USER_ID);
         chatFragment = new MEaseChatFragment();
         //set arguments
         chatFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
 
+        activityInstance = this;
+        //user or group id
+
+
         requestPermissions();
 
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (HXApplication.getInstance().getUserAccount()!=null&&HXApplication.getInstance().getUserAccount().isLogin()) {
+            EMClient.getInstance().login(HXApplication.getInstance().getUserAccount().getHuanxinId(), HXApplication.getInstance().getUserAccount().getHuanxinPassword(), new EMCallBack() {
+                @Override
+                public void onSuccess() {
+                    chatFragment.onResume();
+//                startActivity(new Intent(ChatActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
+                }
+
+                @Override
+                public void onProgress(int progress, String status) {
+
+                }
+
+                @Override
+                public void onError(int code, String error) {
+                    Log.e("WebViewActivity", error);
+                }
+            });
+        }else {
+            finish();
+        }
     }
 
     @TargetApi(23)
@@ -76,6 +109,7 @@ public class ChatActivity extends EaseBaseActivity {
             }
         });
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

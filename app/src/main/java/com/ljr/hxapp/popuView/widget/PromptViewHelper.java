@@ -28,9 +28,9 @@ public class PromptViewHelper {
         this.promptViewManager = promptViewManager;
         this.promptViewManager.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
-                if(onItemClickListener != null && popupWindow != null) {
-                    onItemClickListener.onItemClick(position);
+            public void onItemClick(int position, String string) {
+                if (onItemClickListener != null && popupWindow != null) {
+                    onItemClickListener.onItemClick(position, string);
                     popupWindow.dismiss();
                 }
             }
@@ -49,18 +49,18 @@ public class PromptViewHelper {
 
     public void createPrompt(final View srcView) {
         final View promptView = promptViewManager.getPromptView();
-        if(popupWindow == null)
-            popupWindow =  new PopupWindow(activity);
+        if (popupWindow == null)
+            popupWindow = new PopupWindow(activity);
         popupWindow.setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setTouchable(true);
         popupWindow.setOutsideTouchable(true);
-        popupWindow.setBackgroundDrawable( new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setContentView(promptView);
         final int[] location = new int[2];
         promptView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if(!isShow && popupWindow.isShowing()) {
+                if (!isShow && popupWindow.isShowing()) {
                     popupWindow.dismiss();
                     show(srcView, promptView, location);
                     isShow = true;
@@ -119,6 +119,8 @@ public class PromptViewHelper {
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int position, String string);
     }
+
+
 }

@@ -23,6 +23,12 @@ userType:用户类型（1会员，0管理员，-1超级管理员）； 
 
     private LogOut logOut;
 
+    private GetImg getImg;
+
+
+    public void setGetImg(GetImg getImg) {
+        this.getImg = getImg;
+    }
 
     public void setLogOut(LogOut logOut) {
         this.logOut = logOut;
@@ -39,6 +45,21 @@ userType:用户类型（1会员，0管理员，-1超级管理员）； 
 
     public interface LogOut {
         void logOut();
+        void backRoom();
+    }
+
+    public interface GetImg {
+        void getImg();
+    }
+
+    @JavascriptInterface
+    public void getImg() {
+        getImg.getImg();
+    }
+
+    @JavascriptInterface
+    public void backRoom() {
+        logOut.backRoom();
     }
 
     @JavascriptInterface
@@ -54,7 +75,6 @@ userType:用户类型（1会员，0管理员，-1超级管理员）； 
 
     @JavascriptInterface
     public void logOut(String a) {
-        Log.e("AAAAAAA",a+"");
         logOut.logOut();
     }
 }

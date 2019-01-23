@@ -78,7 +78,7 @@ public class EaseChatMessageList extends RelativeLayout {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageList);
         EaseMessageListItemStyle.Builder builder = new EaseMessageListItemStyle.Builder();
         builder.showAvatar(ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserAvatar, true))
-                .showUserNick(ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserNick, false))
+                .showUserNick(ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserNick, true))
                 .myBubbleBg(ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground))
                 .otherBuddleBg(ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground));
 

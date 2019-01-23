@@ -28,7 +28,6 @@
             android:gravity="center_vertical"
             android:textColor="@color/btn_white_normal"
             android:layout_height="match_parent"
-            android:drawableLeft="@drawable/ease_mm_title_back"
             android:paddingLeft="10dp" />
 
         <TextView
