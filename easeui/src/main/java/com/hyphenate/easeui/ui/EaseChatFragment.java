@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -133,10 +134,9 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 //    protected int[] itemdrawables = {R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector,
 //            R.drawable.ease_chat_location_selector};
 //protected int[] itemIds = {ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_LOCATION};
-    protected int[] itemStrings = {R.string.attach_picture, R.string.all_notify};
-    protected int[] itemdrawables = {R.drawable.ease_chat_image_selector,
-            R.drawable.ease_chat_location_selector};
-    protected int[] itemIds = {ITEM_PICTURE, ITEM_LOCATION};
+    protected int[] itemStrings = {R.string.attach_picture};
+    protected int[] itemdrawables = {R.drawable.ease_chat_image_selector};
+    protected int[] itemIds = {ITEM_PICTURE};
     private boolean isMessageListInited;
     protected MyItemClickListener extendMenuItemClickListener;
     protected boolean isRoaming = false;
@@ -146,9 +146,10 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     // "正在输入"功能的开关，打开后本设备发送消息将持续发送cmd类型消息通知对方"正在输入"
     private boolean turnOnTyping;
 
-    private TextView tv_title_bar;
 
     private ImageView im_my_info;
+
+    private LinearLayout ll_title_bar;
 
 
     private  EMGroup group;
@@ -189,8 +190,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         // hold to record voice
         //noinspection ConstantConditions
         voiceRecorderView = (EaseVoiceRecorderView) getView().findViewById(R.id.voice_recorder);
-        tv_title_bar = getView().findViewById(R.id.tv_title_bar);
-        im_my_info = getView().findViewById(R.id.im_my_info);
+        ll_title_bar = getView().findViewById(R.id.ll_title_bar);
         // message list layout
         messageList = (EaseChatMessageList) getView().findViewById(R.id.message_list);
         if (chatType != EaseConstant.CHATTYPE_SINGLE)
@@ -311,60 +311,13 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     }
 
     protected void setUpView() {
-        hideTitleBar();
-        initMyTitle();
+        ll_title_bar.setVisibility(View.GONE);
         initTitleBar();
 
 
     }
 
-    private void initMyTitle() {
-        getGradName();
-        tv_title_bar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-
-//                getGradName();
-            }
-
-
-        });
-
-        im_my_info.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(getActivity(), "个人信息", Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
-    private void getGradName() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    group  = EMClient.getInstance().groupManager().getGroupFromServer(toChatUsername);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String groupName = "%s(%s)";
-                            tv_title_bar.setText(String.format(groupName, group.getGroupName(), group.getAffiliationsCount()));
-                        }
-                    });
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-    }
-
-
     private void initTitleBar() {
-        chatType = 2;
         titleBar.setTitle(toChatUsername);
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             // set title

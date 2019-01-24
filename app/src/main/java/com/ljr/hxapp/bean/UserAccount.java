@@ -110,4 +110,21 @@ public class UserAccount implements Serializable {
         this.password = password;
     }
 
+
+    @Override
+    public String toString() {
+        return "UserAccount{" +
+                "huanxinId='" + huanxinId + '\'' +
+                ", huanxinPassword='" + huanxinPassword + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", userImg='" + userImg + '\'' +
+                ", groupId='" + groupId + '\'' +
+                ", userType='" + userType + '\'' +
+                ", userAccount='" + userAccount + '\'' +
+                ", password='" + password + '\'' +
+                ", userId='" + userId + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", isLogin=" + isLogin +
+                '}';
+    }
 }

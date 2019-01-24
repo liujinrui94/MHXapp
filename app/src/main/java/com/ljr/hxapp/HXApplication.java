@@ -15,6 +15,7 @@ package com.ljr.hxapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.hyphenate.easeui.EaseUI;
@@ -48,6 +49,7 @@ public class HXApplication extends Application {
 
     public void setUserAccount(UserAccount userAccount) {
         this.userAccount = userAccount;
+        Log.e("AAAAAA",userAccount.toString());
     }
 
     public static HXApplication getInstance() {

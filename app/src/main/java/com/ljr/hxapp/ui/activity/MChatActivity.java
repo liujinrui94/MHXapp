@@ -1,12 +1,8 @@
 package com.ljr.hxapp.ui.activity;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,24 +10,17 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.ui.EaseChatFragment;
-import com.hyphenate.util.EasyUtils;
 import com.ljr.hxapp.HXApplication;
 import com.ljr.hxapp.R;
 import com.ljr.hxapp.base.EaseBaseActivity;
-import com.ljr.hxapp.ui.fragment.MEaseChatFragment;
 import com.ljr.hxapp.utils.PermissionsManager;
 import com.ljr.hxapp.utils.PermissionsResultAction;
 
-/**
- * @author:liujinrui
- * @Date:2019/1/15
- * @Description:
- */
-public class ChatActivity extends EaseBaseActivity {
+public class MChatActivity extends EaseBaseActivity {
 
 
-    public static ChatActivity activityInstance;
-    private MEaseChatFragment chatFragment;
+    public static MChatActivity activityInstance;
+    private EaseChatFragment chatFragment;
     String toChatUsername;
 
     @Override
@@ -40,7 +29,7 @@ public class ChatActivity extends EaseBaseActivity {
         setContentView(R.layout.em_activity_chat);
 
         toChatUsername = getIntent().getExtras().getString(EaseConstant.EXTRA_USER_ID);
-        chatFragment = new MEaseChatFragment();
+        chatFragment = new EaseChatFragment();
         //set arguments
         chatFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();

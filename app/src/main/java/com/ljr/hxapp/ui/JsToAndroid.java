@@ -23,11 +23,10 @@ userType:用户类型（1会员，0管理员，-1超级管理员）； 
 
     private LogOut logOut;
 
-    private GetImg getImg;
+    private MineJs mineJs;
 
-
-    public void setGetImg(GetImg getImg) {
-        this.getImg = getImg;
+    public void setMineJs(MineJs mineJs) {
+        this.mineJs = mineJs;
     }
 
     public void setLogOut(LogOut logOut) {
@@ -48,13 +47,30 @@ userType:用户类型（1会员，0管理员，-1超级管理员）； 
         void backRoom();
     }
 
-    public interface GetImg {
+    public interface MineJs {
         void getImg();
+        void newsList();
+        void privateChat(String message);
+        void changeGroup(String message);
+    }
+    @JavascriptInterface
+    public void newsList() {
+        mineJs.newsList();
+    }
+
+    @JavascriptInterface
+    public void changeGroup(String message) {
+        mineJs.changeGroup(message);
+    }
+
+    @JavascriptInterface
+    public void privateChat(String message) {
+        mineJs.privateChat(message);
     }
 
     @JavascriptInterface
     public void getImg() {
-        getImg.getImg();
+        mineJs.getImg();
     }
 
     @JavascriptInterface

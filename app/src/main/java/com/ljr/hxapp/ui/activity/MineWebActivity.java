@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -17,17 +15,18 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.easeui.EaseConstant;
 import com.ljr.hxapp.HXApplication;
 import com.ljr.hxapp.R;
 import com.ljr.hxapp.base.BaseActivity;
 import com.ljr.hxapp.base.Constant;
+import com.ljr.hxapp.bean.ToUser;
+import com.ljr.hxapp.bean.UserAccount;
 import com.ljr.hxapp.bean.UserImage;
 import com.ljr.hxapp.bean.UserInfo;
 import com.ljr.hxapp.bean.UserInfoBuilder;
 import com.ljr.hxapp.databinding.WebViewActBinding;
-import com.ljr.hxapp.network.entity.Params;
 import com.ljr.hxapp.ui.JsToAndroid;
-import com.ljr.hxapp.utils.AppLogger;
 import com.ljr.hxapp.utils.FileUtils;
 import com.ljr.hxapp.utils.GsonUtil;
 import com.ljr.hxapp.utils.ToastUtil;
@@ -37,30 +36,17 @@ import com.lzy.okhttputils.callback.StringCallback;
 import com.lzy.okhttputils.model.HttpParams;
 import com.lzy.okhttputils.request.BaseRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-
-import javax.xml.transform.Result;
 
 import okhttp3.Call;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 /**
  * @author:liujinrui
  * @Date:2019/1/18
  * @Description:
  */
-public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut , JsToAndroid.GetImg {
+public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut , JsToAndroid.MineJs {
 
     private static final int REQUEST_CODE_LOCAL = 3;
     private BaseProgressDialog baseProgressDialog;
@@ -88,7 +74,7 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
     private void initView() {
         baseProgressDialog = new BaseProgressDialog(MineWebActivity.this);
         jsToAndroid.setLogOut(this);
-        jsToAndroid.setGetImg(this);
+        jsToAndroid.setMineJs(this);
         WebSettings mWebSettings = binding.webView.getSettings();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             binding.webView.setWebContentsDebuggingEnabled(true);
@@ -244,5 +230,27 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
     @Override
     public void getImg() {
         selectPicFromLocal();
+    }
+
+    @Override
+    public void newsList() {
+
+        startActivity(new Intent(MineWebActivity.this, ConversationListActivity.class));
+    }
+
+    @Override
+    public void privateChat( String message) {
+        ToUser toUser=GsonUtil.GsonToBean(message,ToUser.class);
+        startActivity(new Intent(MineWebActivity.this, MChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, toUser.getToId()));
+
+    }
+
+    @Override
+    public void changeGroup(String message) {
+        final UserAccount userAccount= GsonUtil.GsonToBean(message,UserAccount.class);
+        userAccount.setLogin(true);
+        HXApplication.getInstance().setUserAccount(userAccount);
+        startActivity(new Intent(MineWebActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
+        finish();
     }
 }
