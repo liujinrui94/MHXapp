@@ -21,8 +21,7 @@ import com.hyphenate.easeui.ui.EaseConversationListFragment;
 import com.hyphenate.util.NetUtils;
 import com.ljr.hxapp.R;
 import com.ljr.hxapp.base.Constant;
-import com.ljr.hxapp.ui.activity.ChatActivity;
-import com.ljr.hxapp.ui.activity.MainActivity;
+import com.ljr.hxapp.ui.activity.MChatActivity;
 
 public class ConversationListFragment extends EaseConversationListFragment {
 
@@ -51,7 +50,7 @@ public class ConversationListFragment extends EaseConversationListFragment {
                     Toast.makeText(getActivity(), R.string.Cant_chat_with_yourself, Toast.LENGTH_SHORT).show();
                 else {
                     // start chat acitivity
-                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    Intent intent = new Intent(getActivity(), MChatActivity.class);
                     if(conversation.isGroup()){
                         if(conversation.getType() == EMConversation.EMConversationType.ChatRoom){
                             // it's group chat

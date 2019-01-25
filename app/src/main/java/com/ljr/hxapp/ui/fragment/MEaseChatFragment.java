@@ -76,6 +76,8 @@ import com.ljr.hxapp.popuView.widget.Location;
 import com.ljr.hxapp.popuView.widget.PromptViewHelper;
 import com.ljr.hxapp.ui.activity.MineWebActivity;
 import com.ljr.hxapp.ui.activity.WebActivity;
+import com.ljr.hxapp.utils.ToastUtil;
+import com.ljr.hxapp.widget.CommonDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -85,6 +87,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MEaseChatFragment extends EaseBaseFragment implements EMMessageListener {
     protected static final String TAG = "EaseChatFragment";
@@ -157,7 +165,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
 
 
     private EMGroup group;
-
+    private CommonDialog commonDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -194,6 +202,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
     protected void initView() {
         // hold to record voice
         //noinspection ConstantConditions
+
         voiceRecorderView = (EaseVoiceRecorderView) getView().findViewById(R.id.voice_recorder);
         tv_title_bar = getView().findViewById(R.id.tv_title_bar);
         im_my_info = getView().findViewById(R.id.im_my_info);
@@ -332,7 +341,9 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             public void onClick(View v) {
 //                onBackPressed();
 //                getGradName();
-                WebActivity.WebActivity(getActivity(), Constant.groupMember,group.getGroupName(),group.getGroupId());
+                if (HXApplication.getInstance().getUserAccount().getUserType().equals("1")) {
+                    WebActivity.WebActivity(getActivity(), Constant.groupMember, group.getGroupName(), group.getGroupId());
+                }
             }
 
 
@@ -368,6 +379,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
                 }
             }
         }).start();
+
 
     }
 
@@ -532,7 +544,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             }
 
             @Override
-            public void onUserAvatarLongClick(String username, View view) {
+            public void onUserAvatarLongClick(final String username, View view) {
 
                 if (EMClient.getInstance().getCurrentUser().equals(username) ||
                         chatType != EaseConstant.CHATTYPE_GROUP) {
@@ -546,6 +558,45 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
                         pvHelper.setOnItemClickListener(new PromptViewHelper.OnItemClickListener() {
                             @Override
                             public void onItemClick(int position, String string) {
+                                switch (string) {
+                                    case "@本人":
+                                        inputAtUsername(username);
+                                        break;
+                                    case "禁言":
+
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    List<String> muteMembers = new ArrayList<String>();
+                                                    muteMembers.add(username);
+                                                    EMClient.getInstance().groupManager().muteGroupMembers(group.getGroupId(), muteMembers, 20 * 60 * 1000);
+                                                } catch (HyphenateException e) {
+                                                    e.printStackTrace();
+                                                    ToastUtil.showCenterToast(e.toString());
+                                                }
+                                            }
+                                        }).start();
+                                        break;
+                                    case "取消禁言":
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    List<String> list = new ArrayList<String>();
+                                                    list.add(username);
+                                                    EMClient.getInstance().groupManager().unMuteGroupMembers(group.getGroupId(), list);
+                                                } catch (HyphenateException e) {
+                                                    e.printStackTrace();
+                                                    ToastUtil.showCenterToast(e.toString());
+                                                }
+                                            }
+                                        }).start();
+                                        break;
+                                    case "修改备注":
+
+                                        break;
+                                }
 
                             }
                         });
@@ -559,35 +610,62 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             }
 
             @Override
-            public void onBubbleLongClick(final EMMessage message, View view) {
+            public void onBubbleLongClick(final EMMessage message, final View view) {
                 //气泡框长按事件
                 if (EMClient.getInstance().getCurrentUser().equals(message.getFrom())) {
                     PromptViewHelper pvHelper = new PromptViewHelper(getActivity());
-                    pvHelper.setPromptViewManager(new ChatPromptViewManager(getActivity(), new String[]{"复制", "撤回", "清除本条", "清除全部"}));
+                    String[] strings;
+                    if (message.getType() == EMMessage.Type.TXT) {
+                        strings = new String[]{"复制", "撤回", "清除本条", "清除全部"};
+                    } else {
+                        strings = new String[]{"撤回", "清除本条", "清除全部"};
+                    }
+                    pvHelper.setPromptViewManager(new ChatPromptViewManager(getActivity(), strings));
                     pvHelper.createPrompt(view);
                     pvHelper.setOnItemClickListener(new PromptViewHelper.OnItemClickListener() {
                         @Override
                         public void onItemClick(int position, String string) {
+                            switch (string) {
+                                case "复制":
+                                    ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+//                                 创建普通字符型ClipData
+                                    ClipData mClipData = ClipData.newPlainText("Label", ((EMTextMessageBody) message.getBody()).getMessage());
+//                                 将ClipData内容放到系统剪贴板里。
+                                    cm.setPrimaryClip(mClipData);
 
+                                    break;
+                                case "撤回":
+                                    ToastUtil.showCenterToast("此功能暂未开放！");
+                                    break;
+                                case "清除本条":
+                                    conversation.removeMessage(contextMenuMessage.getMsgId());
+                                    messageList.refresh();
+                                    // To delete the ding-type message native stored acked users.
+                                    EaseDingMessageHelper.get().delete(contextMenuMessage);
+                                    break;
+                                case "清除全部":
+                                    emptyHistory();
+                                    break;
+                            }
                         }
                     });
                 } else {
+                    if (message.getType() == EMMessage.Type.TXT) {
+                        PromptViewHelper pvHelper = new PromptViewHelper(getActivity());
+                        pvHelper.setPromptViewManager(new ChatPromptViewManager(getActivity(), new String[]{"复制"}));
+                        pvHelper.createPrompt(view);
+                        pvHelper.setOnItemClickListener(new PromptViewHelper.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int position, String string) {
+                                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+//                                 创建普通字符型ClipData
+                                ClipData mClipData = ClipData.newPlainText("Label", ((EMTextMessageBody) message.getBody()).getMessage());
+//                                 将ClipData内容放到系统剪贴板里。
+                                cm.setPrimaryClip(mClipData);
 
-                    PromptViewHelper pvHelper = new PromptViewHelper(getActivity());
-                    pvHelper.setPromptViewManager(new ChatPromptViewManager(getActivity(), new String[]{"复制"}));
-                    pvHelper.createPrompt(view);
-                    pvHelper.setOnItemClickListener(new PromptViewHelper.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(int position, String string) {
-                            ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                            Log.e("AAAAA",message.toString());
-                            // 创建普通字符型ClipData
-//                            ClipData mClipData = ClipData.newPlainText("Label", message.getBody());
-                            // 将ClipData内容放到系统剪贴板里。
-//                            cm.setPrimaryClip(mClipData);
-
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
 
                 contextMenuMessage = message;
@@ -921,18 +999,8 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
                     selectPicFromLocal();
                     break;
                 case ITEM_LOCATION:
-//                    startActivityForResult(new Intent(getActivity(), EaseBaiduMapActivity.class), REQUEST_CODE_MAP);
-//                    sendAtMessage("");
-                    //TODO
-                    List<String> atMembers = new ArrayList<String>();
-                    atMembers.add("6001");
-                    atMembers.add("6002");
-                    JSONArray atJson = new JSONArray(atMembers);
-                    // 设置消息的扩展为@群成员类型
-                    EMMessage message = EMMessage.createTxtSendMessage("1", toChatUsername);
-//                    message.setAttribute(EaseConstant.MESSAGE_ATTR_AT_MSG, EaseConstant.MESSAGE_ATTR_VALUE_AT_MSG_ALL);
-                    message.setAttribute("em_at_list", atJson); // @6001,6002
-                    Log.e("AAAA", "AAAAAA");
+                    inputAtUsername(getString(R.string.all_members), true);
+
                     break;
 
                 default:
@@ -1069,6 +1137,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
     protected EMCallBack messageStatusCallback = new EMCallBack() {
         @Override
         public void onSuccess() {
+            Log.e("EaseChatRowPresenter", "onSuccess: ");
             if (isMessageListInited) {
                 messageList.refresh();
             }
@@ -1076,7 +1145,24 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
 
         @Override
         public void onError(int code, String error) {
-            Log.i("EaseChatRowPresenter", "onError: " + code + ", error: " + error);
+            if (code == 215) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        commonDialog = new CommonDialog(getActivity());
+                        commonDialog.setOnPositiveListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                commonDialog.dismiss();
+                            }
+                        });
+                        commonDialog.show();
+                    }
+
+                });
+
+            }
+
             if (isMessageListInited) {
                 messageList.refresh();
             }
@@ -1307,6 +1393,21 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
                 }
             });
         }
+
+        @Override
+        public void onMuteListAdded(String groupId, final List<String> mutes, final long muteExpire) {
+            //成员禁言的通知
+
+            Log.e("AAAAA1", groupId + " " + mutes.toString() + " " + muteExpire);
+
+        }
+
+        @Override
+        public void onMuteListRemoved(String groupId, final List<String> mutes) {
+            //成员从禁言列表里移除通知
+            Log.e("AAAAA2", groupId + " " + mutes.toString());
+        }
+
     }
 
     /**
