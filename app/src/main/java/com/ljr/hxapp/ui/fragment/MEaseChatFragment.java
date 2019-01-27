@@ -341,12 +341,8 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             public void onClick(View v) {
 //                onBackPressed();
 //                getGradName();
-                if (HXApplication.getInstance().getUserAccount().getUserType().equals("1")) {
                     WebActivity.WebActivity(getActivity(), Constant.groupMember, group.getGroupName(), group.getGroupId());
-                }
             }
-
-
         });
 
         im_my_info.setOnClickListener(new OnClickListener() {
@@ -383,14 +379,15 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
 
     }
 
-
+/**/
     private void initTitleBar() {
         chatType = 2;
+
         titleBar.setTitle(toChatUsername);
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             // set title
             if (EaseUserUtils.getUserInfo(toChatUsername) != null) {
-                EaseUser user = EaseUserUtils.getUserInfo(toChatUsername);
+                EaseUser   user= EaseUserUtils.getUserInfo(toChatUsername);
                 if (user != null) {
                     titleBar.setTitle(user.getNickname());
                 }
@@ -444,14 +441,19 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
         if (forward_msg_id != null) {
             forwardMessage(forward_msg_id);
         }
+
     }
 
     /**
      * register extend menu, item id need > 3 if you override this method and keep exist item
      */
     protected void registerExtendMenuItem() {
-        for (int i = 0; i < itemStrings.length; i++) {
-            inputMenu.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], extendMenuItemClickListener);
+        if (HXApplication.getInstance().getUserAccount().getUserType().equals("1")) {
+            inputMenu.registerExtendMenuItem(itemStrings[0], itemdrawables[0], itemIds[0], extendMenuItemClickListener);
+        }else {
+            for (int i = 0; i < itemStrings.length; i++) {
+                inputMenu.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], extendMenuItemClickListener);
+            }
         }
     }
 
@@ -916,6 +918,10 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
     public void onMessageReceived(List<EMMessage> messages) {
         for (EMMessage message : messages) {
             String username = null;
+           //消息到达
+            EaseUserUtils.getUserInfo(message.getUserName()).setNickname(message.getStringAttribute("userName", ""));
+            EaseUserUtils.getUserInfo(message.getUserName()).setAvatar(message.getStringAttribute("userPic", ""));
+
             // group message
             if (message.getChatType() == ChatType.GroupChat || message.getChatType() == ChatType.ChatRoom) {
                 username = message.getTo();
@@ -928,6 +934,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             if (username.equals(toChatUsername) || message.getTo().equals(toChatUsername) || message.conversationId().equals(toChatUsername)) {
                 messageList.refreshSelectLast();
                 conversation.markMessageAsRead(message.getMsgId());
+
             }
             EaseUI.getInstance().getNotifier().vibrateAndPlayTone(message);
         }
@@ -1120,7 +1127,8 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
         } else if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
             message.setChatType(ChatType.ChatRoom);
         }
-
+        message.setAttribute("userPic",HXApplication.getInstance().getUserAccount().getUserImg());
+        message.setAttribute("userName", HXApplication.getInstance().getUserAccount().getNickname());
         message.setMessageStatusCallback(messageStatusCallback);
 
         // Send message.
@@ -1398,14 +1406,12 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
         public void onMuteListAdded(String groupId, final List<String> mutes, final long muteExpire) {
             //成员禁言的通知
 
-            Log.e("AAAAA1", groupId + " " + mutes.toString() + " " + muteExpire);
 
         }
 
         @Override
         public void onMuteListRemoved(String groupId, final List<String> mutes) {
             //成员从禁言列表里移除通知
-            Log.e("AAAAA2", groupId + " " + mutes.toString());
         }
 
     }

@@ -18,6 +18,9 @@ import android.widget.Toast;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.EaseUI;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.ljr.hxapp.HXApplication;
 import com.ljr.hxapp.R;
 import com.ljr.hxapp.base.BaseActivity;
@@ -137,8 +140,9 @@ public class WebViewActivity extends BaseActivity implements JsToAndroid.JsData 
 
     @Override
     public void Into(String message) {
-        final UserAccount userAccount= GsonUtil.GsonToBean(message,UserAccount.class);
+        final UserAccount userAccount = GsonUtil.GsonToBean(message, UserAccount.class);
         userAccount.setLogin(true);
+        Log.e("AAAA", message);
         HXApplication.getInstance().setUserAccount(userAccount);
         startActivity(new Intent(WebViewActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
         finish();

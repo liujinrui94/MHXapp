@@ -130,6 +130,12 @@ public class EaseConversationListFragment extends EaseBaseFragment{
                 return false;
             }
         });
+        titleBar.setLeftLayoutClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
     }
     
     

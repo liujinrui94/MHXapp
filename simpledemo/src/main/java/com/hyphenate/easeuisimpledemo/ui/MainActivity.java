@@ -53,8 +53,6 @@ public class MainActivity extends EaseBaseActivity{
             
             @Override
             public void onListItemClicked(EMConversation conversation) {
-                Log.e("AAAAAA",conversation.toString());
-                Log.e("AAAAAA",EaseConstant.EXTRA_USER_ID+"   "+conversation.conversationId());
                 startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, conversation.conversationId()));
 
 

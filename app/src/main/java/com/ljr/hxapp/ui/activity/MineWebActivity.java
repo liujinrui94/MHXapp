@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.ViewGroup;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -29,6 +31,7 @@ import com.ljr.hxapp.databinding.WebViewActBinding;
 import com.ljr.hxapp.ui.JsToAndroid;
 import com.ljr.hxapp.utils.FileUtils;
 import com.ljr.hxapp.utils.GsonUtil;
+import com.ljr.hxapp.utils.ImageUtils;
 import com.ljr.hxapp.utils.ToastUtil;
 import com.ljr.hxapp.widget.BaseProgressDialog;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -98,11 +101,14 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                UserInfo userInfo = new UserInfoBuilder()
-                        .withGroupName(HXApplication.getInstance().getUserAccount().getGroupName())
-                        .withPassword(HXApplication.getInstance().getUserAccount().getPassword())
-                        .withUserAccout(HXApplication.getInstance().getUserAccount().getUserAccount()).build();
-                binding.webView.loadUrl(String.format("javascript:window.getInfo('%s')", GsonUtil.BeanToJson(userInfo)));
+                if (url.contains("userPage")) {
+                    Log.e("AAAAAA", url + "\n" + HXApplication.getInstance().getUserAccount().toString());
+                    UserInfo userInfo = new UserInfoBuilder()
+                            .withGroupName(HXApplication.getInstance().getUserAccount().getGroupName())
+                            .withPassword(HXApplication.getInstance().getUserAccount().getPassword())
+                            .withUserAccout(HXApplication.getInstance().getUserAccount().getUserAccount()).build();
+                    binding.webView.loadUrl(String.format("javascript:window.getInfo('%s')", GsonUtil.BeanToJson(userInfo)));
+                }
 
             }
         });
@@ -134,21 +140,32 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_LOCAL) { // send local image
             if (data != null) {
-                selectedImage = data.getData();
-                if (selectedImage != null) {
-                    upData();
+                selectedImage = ImageUtils.getOutput(MineWebActivity.this);
+                if (data.getData() != null) {
+                    ImageUtils.cropImageUri(MineWebActivity.this,data.getData(),selectedImage,101);
                 }
             }
+        }else if (requestCode==101){
+            upData();
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        if (binding.webView != null) {
+            jsToAndroid.setLogOut(null);
+            jsToAndroid.setMineJs(null);
+            binding.webView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            binding.webView.clearHistory();
+            ((ViewGroup) binding.webView.getParent()).removeView(binding.webView);
+            binding.webView.destroy();
+        }
+        super.onDestroy();
+    }
 
     private void upData() {
-
         HttpParams httpParams = new HttpParams();
-        String string=FileUtils.UriToString(selectedImage,MineWebActivity.this);
-
-        httpParams.put("imgFile", new File(string));
+        httpParams.put("imgFile", new File(selectedImage.getPath()));
         httpParams.put("userId", HXApplication.getInstance().getUserAccount().getUserId());
         OkHttpUtils.post("http://imtx.lmuze.xyz/uploadHeaderImage")
                 .params(httpParams)
@@ -249,6 +266,9 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
     public void changeGroup(String message) {
         final UserAccount userAccount= GsonUtil.GsonToBean(message,UserAccount.class);
         userAccount.setLogin(true);
+        userAccount.setPassword(HXApplication.getInstance().getUserAccount().getPassword());
+        userAccount.setUserAccount(HXApplication.getInstance().getUserAccount().getUserAccount());
+        userAccount.setUserId(HXApplication.getInstance().getUserAccount().getUserId());
         HXApplication.getInstance().setUserAccount(userAccount);
         startActivity(new Intent(MineWebActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
         finish();

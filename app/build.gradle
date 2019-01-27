@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-
-
+    // 移除lint检查的error
     compileSdkVersion 28
     // 开启dataBinding
     dataBinding.enabled = true

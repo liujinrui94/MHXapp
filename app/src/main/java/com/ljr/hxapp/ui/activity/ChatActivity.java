@@ -13,7 +13,9 @@ import android.util.Log;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.ui.EaseChatFragment;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.util.EasyUtils;
 import com.ljr.hxapp.HXApplication;
 import com.ljr.hxapp.R;
@@ -40,6 +42,7 @@ public class ChatActivity extends EaseBaseActivity {
         setContentView(R.layout.em_activity_chat);
 
         toChatUsername = getIntent().getExtras().getString(EaseConstant.EXTRA_USER_ID);
+        EaseUserUtils.getUserInfo(HXApplication.getInstance().getUserAccount().getHuanxinId()).setAvatar(HXApplication.getInstance().getUserAccount().getUserImg());
         chatFragment = new MEaseChatFragment();
         //set arguments
         chatFragment.setArguments(getIntent().getExtras());
@@ -58,6 +61,8 @@ public class ChatActivity extends EaseBaseActivity {
             EMClient.getInstance().login(HXApplication.getInstance().getUserAccount().getHuanxinId(), HXApplication.getInstance().getUserAccount().getHuanxinPassword(), new EMCallBack() {
                 @Override
                 public void onSuccess() {
+//                    EaseUser easeUser= EaseUserUtils.getUserInfo(HXApplication.getInstance().getUserAccount().getHuanxinId());
+//                    Log.e("AAAAA",easeUser.toString());
                     chatFragment.onResume();
 //                startActivity(new Intent(ChatActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
                 }
