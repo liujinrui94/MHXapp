@@ -40,14 +40,11 @@ public class ChatActivity extends EaseBaseActivity {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_chat);
-
         toChatUsername = getIntent().getExtras().getString(EaseConstant.EXTRA_USER_ID);
-        EaseUserUtils.getUserInfo(HXApplication.getInstance().getUserAccount().getHuanxinId()).setAvatar(HXApplication.getInstance().getUserAccount().getUserImg());
         chatFragment = new MEaseChatFragment();
         //set arguments
         chatFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
-
         activityInstance = this;
         requestPermissions();
 
@@ -61,10 +58,7 @@ public class ChatActivity extends EaseBaseActivity {
             EMClient.getInstance().login(HXApplication.getInstance().getUserAccount().getHuanxinId(), HXApplication.getInstance().getUserAccount().getHuanxinPassword(), new EMCallBack() {
                 @Override
                 public void onSuccess() {
-//                    EaseUser easeUser= EaseUserUtils.getUserInfo(HXApplication.getInstance().getUserAccount().getHuanxinId());
-//                    Log.e("AAAAA",easeUser.toString());
                     chatFragment.onResume();
-//                startActivity(new Intent(ChatActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
                 }
 
                 @Override

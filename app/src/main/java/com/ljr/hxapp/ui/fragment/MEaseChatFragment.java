@@ -382,7 +382,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
 /**/
     private void initTitleBar() {
         chatType = 2;
-
+        EaseUserUtils.getUserInfo(EMClient.getInstance().getCurrentUser()).setAvatar(HXApplication.getInstance().getUserAccount().getUserImg());
         titleBar.setTitle(toChatUsername);
         if (chatType == EaseConstant.CHATTYPE_SINGLE) {
             // set title
