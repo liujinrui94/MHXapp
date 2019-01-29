@@ -15,6 +15,7 @@ import com.ljr.hxapp.R;
 import com.ljr.hxapp.base.EaseBaseActivity;
 import com.ljr.hxapp.utils.PermissionsManager;
 import com.ljr.hxapp.utils.PermissionsResultAction;
+import com.lzy.okhttputils.OkHttpUtils;
 
 public class MChatActivity extends EaseBaseActivity {
 
@@ -48,7 +49,6 @@ public class MChatActivity extends EaseBaseActivity {
                 @Override
                 public void onSuccess() {
                     chatFragment.onResume();
-//                startActivity(new Intent(ChatActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
                 }
 
                 @Override

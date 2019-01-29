@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="viewCtrl"
+            type="com.ljr.hxapp.viewControl.RemarkCtrl" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_top_bar"
+            android:background="@color/top_bar_normal_bg"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tv_title_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ease_mm_title_back"
+                android:gravity="center_vertical"
+                android:onClick="@{viewCtrl.goBack}"
+                android:paddingLeft="10dp"
+                android:text="返回"
+                android:textColor="@color/btn_white_normal"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="设置备注"
+                android:textColor="@color/btn_white_normal"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:background="@drawable/et_bule_background"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_50"
+                android:layout_marginBottom="@dimen/dp_30"
+                android:hint="请输入备注"
+                android:text="@={viewCtrl.remarkVM.remark}"
+                android:padding="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_50"
+                android:layout_gravity="center_horizontal" />
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/dp_50"
+                android:layout_marginRight="@dimen/dp_50"
+                android:background="@drawable/btn_background_5"
+                android:onClick="@{viewCtrl.submit}"
+                android:text="确定"
+                android:textColor="@color/btn_white_normal"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</layout>

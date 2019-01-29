@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <!--   <uses-permission android:name="android.permission.CAMERA" />-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -36,24 +36,33 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.MineWebActivity"
-        android:launchMode="singleTask"
-        android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.MineWebActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.activity.WebActivity"
+        <activity
+            android:name=".ui.activity.RemarkActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".ui.activity.WebActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"></activity>
 
 
-        <activity android:name=".ui.activity.GroupsActivity"
-            android:screenOrientation="portrait">
-        </activity>
+        <activity
+            android:name=".ui.activity.GroupsActivity"
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.activity.MChatActivity"
+        <activity
+            android:name=".ui.activity.MChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.activity.ConversationListActivity"
+        <activity
+            android:name=".ui.activity.ConversationListActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
@@ -69,12 +78,12 @@
             android:screenOrientation="portrait" />
 
         <!-- 设置环信应用的appkey -->
-       <!-- <meta-data
+        <!-- <meta-data
+             android:name="EASEMOB_APPKEY"
+             android:value="1120180116115278#lmuze" />-->
+        <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="1120180116115278#lmuze" />-->
-         <meta-data
-                   android:name="EASEMOB_APPKEY"
-                   android:value="1100190103244664#groupchatapp" />
+            android:value="1100190103244664#groupchatapp" />
         <!-- 声明sdk所需的service -->
         <service
             android:name="com.hyphenate.chat.EMChatService"

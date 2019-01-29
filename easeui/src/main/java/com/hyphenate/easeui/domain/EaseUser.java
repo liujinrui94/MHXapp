@@ -27,6 +27,16 @@ public class EaseUser extends EMContact {
      */
     protected String avatar;
 
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public EaseUser(String username) {
         this.username = username;
     }

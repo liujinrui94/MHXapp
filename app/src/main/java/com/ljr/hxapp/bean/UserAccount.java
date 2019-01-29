@@ -11,7 +11,7 @@ public class UserAccount implements Serializable {
 
     private String huanxinId;//环信的账号；
     private String huanxinPassword;//环信的密码；
-    private String nickname;//用户昵称；
+    private String nickName;//用户昵称；
     private String userImg;//用户头像；
     private String groupId;//群组Id；
     private String userType;//用户类型（1会员，0管理员，-1超级管理员）； 
@@ -19,7 +19,18 @@ public class UserAccount implements Serializable {
     private String userId;//:用户的Id
 
     private String groupName;
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     private boolean isLogin;//是否登陆
+
 
 
     public String getUserId() {
@@ -62,12 +73,12 @@ public class UserAccount implements Serializable {
         this.huanxinPassword = huanxinPassword;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getUserImg() {
@@ -111,20 +122,5 @@ public class UserAccount implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        return "UserAccount{" +
-                "huanxinId='" + huanxinId + '\'' +
-                ", huanxinPassword='" + huanxinPassword + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", userImg='" + userImg + '\'' +
-                ", groupId='" + groupId + '\'' +
-                ", userType='" + userType + '\'' +
-                ", userAccount='" + userAccount + '\'' +
-                ", password='" + password + '\'' +
-                ", userId='" + userId + '\'' +
-                ", groupName='" + groupName + '\'' +
-                ", isLogin=" + isLogin +
-                '}';
-    }
+
 }

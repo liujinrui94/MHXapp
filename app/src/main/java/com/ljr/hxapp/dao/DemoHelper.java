@@ -1308,11 +1308,12 @@ public class DemoHelper {
 
                     String userName = message.getStringAttribute("userName", "");
                     String userPic = message.getStringAttribute("userPic", "");
+                    String userId = message.getStringAttribute("userId", "");
                     String hxIdFrom = message.getFrom();
                     EaseUser easeUser = new EaseUser(hxIdFrom);
                     easeUser.setAvatar(userPic);
-                    easeUser.setNick(userName);
-
+                    easeUser.setNickname(userName);
+                    easeUser.setUserId(userId);
                     // 存入内存
                     getContactList();
                     contactList.put(hxIdFrom, easeUser);

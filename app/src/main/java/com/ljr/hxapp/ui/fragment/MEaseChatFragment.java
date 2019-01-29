@@ -15,6 +15,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -75,6 +76,7 @@ import com.ljr.hxapp.popuView.widget.ChatPromptViewManager;
 import com.ljr.hxapp.popuView.widget.Location;
 import com.ljr.hxapp.popuView.widget.PromptViewHelper;
 import com.ljr.hxapp.ui.activity.MineWebActivity;
+import com.ljr.hxapp.ui.activity.RemarkActivity;
 import com.ljr.hxapp.ui.activity.WebActivity;
 import com.ljr.hxapp.utils.ToastUtil;
 import com.ljr.hxapp.widget.CommonDialog;
@@ -596,7 +598,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
                                         }).start();
                                         break;
                                     case "修改备注":
-
+                                        RemarkActivity.RemarkActivity(getActivity(),EaseUserUtils.getUserInfo(username).getUserId(),group.getGroupId());
                                         break;
                                 }
 
@@ -919,8 +921,8 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
         for (EMMessage message : messages) {
             String username = null;
            //消息到达
-            EaseUserUtils.getUserInfo(message.getUserName()).setNickname(message.getStringAttribute("userName", ""));
-            EaseUserUtils.getUserInfo(message.getUserName()).setAvatar(message.getStringAttribute("userPic", ""));
+//            EaseUserUtils.getUserInfo(message.getUserName()).setNickname(message.getStringAttribute("userName", ""));
+//            EaseUserUtils.getUserInfo(message.getUserName()).setAvatar(message.getStringAttribute("userPic", ""));
 
             // group message
             if (message.getChatType() == ChatType.GroupChat || message.getChatType() == ChatType.ChatRoom) {
@@ -1128,7 +1130,12 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             message.setChatType(ChatType.ChatRoom);
         }
         message.setAttribute("userPic",HXApplication.getInstance().getUserAccount().getUserImg());
-        message.setAttribute("userName", HXApplication.getInstance().getUserAccount().getNickname());
+        if (TextUtils.isEmpty(HXApplication.getInstance().getUserAccount().getRemark())){
+            message.setAttribute("userName", HXApplication.getInstance().getUserAccount().getNickName());
+        }else {
+            message.setAttribute("userName", HXApplication.getInstance().getUserAccount().getRemark());
+        }
+        message.setAttribute("userId", HXApplication.getInstance().getUserAccount().getUserId());
         message.setMessageStatusCallback(messageStatusCallback);
 
         // Send message.
@@ -1162,6 +1169,8 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
                             @Override
                             public void onClick(View v) {
                                 commonDialog.dismiss();
+                                MineWebActivity.MineWebActivityStart(getActivity(), "", "", "");
+//                                WebActivity.WebActivity(getActivity(), Constant.groupMember, group.getGroupName(), group.getGroupId());
                             }
                         });
                         commonDialog.show();
