@@ -28,6 +28,7 @@ import com.ljr.hxapp.bean.UserImage;
 import com.ljr.hxapp.bean.UserInfo;
 import com.ljr.hxapp.bean.UserInfoBuilder;
 import com.ljr.hxapp.databinding.WebViewActBinding;
+import com.ljr.hxapp.rsa.encryption.utils.SPUtil;
 import com.ljr.hxapp.ui.JsToAndroid;
 import com.ljr.hxapp.utils.FileUtils;
 import com.ljr.hxapp.utils.GsonUtil;
@@ -49,7 +50,7 @@ import okhttp3.Response;
  * @Date:2019/1/18
  * @Description:
  */
-public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut , JsToAndroid.MineJs {
+public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut, JsToAndroid.MineJs {
 
     private static final int REQUEST_CODE_LOCAL = 3;
     private BaseProgressDialog baseProgressDialog;
@@ -102,7 +103,6 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 if (url.contains("userPage")) {
-                    Log.e("AAAAAA", url + "\n" + HXApplication.getInstance().getUserAccount().toString());
                     UserInfo userInfo = new UserInfoBuilder()
                             .withGroupName(HXApplication.getInstance().getUserAccount().getGroupName())
                             .withPassword(HXApplication.getInstance().getUserAccount().getPassword())
@@ -142,10 +142,10 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
             if (data != null) {
                 selectedImage = ImageUtils.getOutput(MineWebActivity.this);
                 if (data.getData() != null) {
-                    ImageUtils.cropImageUri(MineWebActivity.this,data.getData(),selectedImage,101);
+                    ImageUtils.cropImageUri(MineWebActivity.this, data.getData(), selectedImage, 101);
                 }
             }
-        }else if (requestCode==101){
+        } else if (requestCode == 101) {
             upData();
         }
     }
@@ -175,8 +175,8 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        UserImage userImage=GsonUtil.GsonToBean(s,UserImage.class);
-                        binding.webView.loadUrl(String.format("javascript:window.getHref('%s')",userImage.getImgUrl()));
+                        UserImage userImage = GsonUtil.GsonToBean(s, UserImage.class);
+                        binding.webView.loadUrl(String.format("javascript:window.getHref('%s')", userImage.getImgUrl()));
                         baseProgressDialog.dismiss();
                     }
 
@@ -195,7 +195,7 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
                         baseProgressDialog.dismiss();
-                      ToastUtil.showShortToast(e.toString());
+                        ToastUtil.showShortToast(e.toString());
                     }
                 });
     }
@@ -211,6 +211,7 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
     public void logOut() {
         EMClient.getInstance().logout(true);
         HXApplication.getInstance().getUserAccount().setLogin(false);
+        SPUtil.clear(SPUtil.getSp(getBaseContext(), Constant.SP_NAME));
         startActivity(new Intent(this, WebViewActivity.class));
         finish();
     }
@@ -256,21 +257,21 @@ public class MineWebActivity extends BaseActivity implements JsToAndroid.LogOut 
     }
 
     @Override
-    public void privateChat( String message) {
-        ToUser toUser=GsonUtil.GsonToBean(message,ToUser.class);
+    public void privateChat(String message) {
+        ToUser toUser = GsonUtil.GsonToBean(message, ToUser.class);
         startActivity(new Intent(MineWebActivity.this, MChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, toUser.getToId()));
 
     }
 
     @Override
     public void changeGroup(String message) {
-        final UserAccount userAccount= GsonUtil.GsonToBean(message,UserAccount.class);
+        final UserAccount userAccount = GsonUtil.GsonToBean(message, UserAccount.class);
         userAccount.setLogin(true);
         userAccount.setPassword(HXApplication.getInstance().getUserAccount().getPassword());
         userAccount.setUserAccount(HXApplication.getInstance().getUserAccount().getUserAccount());
         userAccount.setUserId(HXApplication.getInstance().getUserAccount().getUserId());
-        HXApplication.getInstance().setUserAccount(userAccount);
-        startActivity(new Intent(MineWebActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
+        HXApplication.getInstance().setUserAccount(userAccount, true);
+        startActivity(new Intent(MineWebActivity.this, ChatActivity.class));
         finish();
     }
 }

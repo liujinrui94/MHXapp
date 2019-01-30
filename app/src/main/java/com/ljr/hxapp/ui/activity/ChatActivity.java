@@ -21,13 +21,24 @@ import com.ljr.hxapp.HXApplication;
 import com.ljr.hxapp.R;
 import com.ljr.hxapp.base.EaseBaseActivity;
 import com.ljr.hxapp.ui.fragment.MEaseChatFragment;
+import com.ljr.hxapp.utils.GsonUtil;
 import com.ljr.hxapp.utils.PermissionsManager;
 import com.ljr.hxapp.utils.PermissionsResultAction;
+import com.ljr.hxapp.viewModel.RemarkVM;
+
+import java.io.IOException;
+
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * @author:liujinrui
  * @Date:2019/1/15
- * @Description:
+ * @Description:群聊页面
  */
 public class ChatActivity extends EaseBaseActivity {
 
@@ -40,10 +51,13 @@ public class ChatActivity extends EaseBaseActivity {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.em_activity_chat);
-        toChatUsername = getIntent().getExtras().getString(EaseConstant.EXTRA_USER_ID);
+        //.putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()))
+        toChatUsername = HXApplication.getInstance().getUserAccount().getGroupId();
         chatFragment = new MEaseChatFragment();
         //set arguments
-        chatFragment.setArguments(getIntent().getExtras());
+        Bundle bundle=new Bundle();
+        bundle.putString(EaseConstant.EXTRA_USER_ID,toChatUsername);
+        chatFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.container, chatFragment).commit();
         activityInstance = this;
         requestPermissions();
@@ -58,6 +72,31 @@ public class ChatActivity extends EaseBaseActivity {
             EMClient.getInstance().login(HXApplication.getInstance().getUserAccount().getHuanxinId(), HXApplication.getInstance().getUserAccount().getHuanxinPassword(), new EMCallBack() {
                 @Override
                 public void onSuccess() {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RemarkVM remarkVM = new RemarkVM();
+                            remarkVM.setUserId(HXApplication.getInstance().getUserAccount().getUserId());
+                            remarkVM.setGroupId(HXApplication.getInstance().getUserAccount().getGroupId());
+                            MediaType mediaType = MediaType.parse("application/json");
+                            String requestBody = GsonUtil.BeanToJson(remarkVM);
+                            Request request = new Request.Builder()
+                                    .url("http://imtx.lmuze.xyz/updateUserLastActiveTime")
+                                    .post(RequestBody.create(mediaType, requestBody))
+                                    .build();
+                            OkHttpClient okHttpClient = new OkHttpClient();
+                            okHttpClient.newCall(request).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(okhttp3.Call call, IOException e) {
+                                }
+
+                                @Override
+                                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+
+                                }
+                            });
+                        }
+                    }).start();
                     chatFragment.onResume();
                 }
 

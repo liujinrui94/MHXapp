@@ -19,8 +19,11 @@ import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.hyphenate.easeui.EaseUI;
+import com.ljr.hxapp.base.Constant;
 import com.ljr.hxapp.bean.UserAccount;
 import com.ljr.hxapp.dao.DemoHelper;
+import com.ljr.hxapp.rsa.encryption.utils.SPUtil;
+import com.ljr.hxapp.utils.GsonUtil;
 
 public class HXApplication extends Application {
 
@@ -50,9 +53,11 @@ public class HXApplication extends Application {
         return userAccount;
     }
 
-    public void setUserAccount(UserAccount userAccount) {
+    public void setUserAccount(UserAccount userAccount,boolean isUpData) {
         this.userAccount = userAccount;
-//        EaseUI.getInstance().setAvatarOptions();
+        if (isUpData){
+            SPUtil.saveValue(SPUtil.getSp(getBaseContext(), Constant.SP_NAME),Constant.USER_INFO, GsonUtil.BeanToJson(userAccount));
+        }
     }
 
     public static HXApplication getInstance() {

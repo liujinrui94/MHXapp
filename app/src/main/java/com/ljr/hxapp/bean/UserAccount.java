@@ -21,6 +21,8 @@ public class UserAccount implements Serializable {
     private String groupName;
     private String remark;
 
+    private boolean isLogin=false;//是否登陆
+
     public String getRemark() {
         return remark;
     }
@@ -28,10 +30,6 @@ public class UserAccount implements Serializable {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-
-    private boolean isLogin;//是否登陆
-
-
 
     public String getUserId() {
         return userId;

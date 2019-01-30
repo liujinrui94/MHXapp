@@ -13,10 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Author: TinhoXu
- * E-mail: xth@erongdu.com
- * Date: 2016/2/23 19:30
- * <p/>
  * Description: SharePreference 工具类
  */
 @SuppressWarnings("unused")

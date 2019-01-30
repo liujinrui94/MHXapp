@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <import type="android.view.View" />
+
         <variable
             name="viewCtrl"
             type="com.ljr.hxapp.viewControl.RemarkCtrl" />
@@ -55,21 +56,23 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:padding="@dimen/dp_12"
+            android:layout_marginTop="@dimen/dp_80"
             android:orientation="vertical">
 
             <EditText
                 android:layout_width="match_parent"
-                android:background="@drawable/et_bule_background"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/dp_50"
-                android:layout_marginBottom="@dimen/dp_30"
-                android:hint="请输入备注"
-                android:text="@={viewCtrl.remarkVM.remark}"
-                android:padding="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_50"
-                android:layout_gravity="center_horizontal" />
+                android:layout_marginBottom="@dimen/dp_30"
+                android:background="@drawable/et_bule_background"
+                android:hint="请输入备注"
+                android:padding="@dimen/dp_10"
+                android:text="@={viewCtrl.remarkVM.remark}" />
 
 
             <Button
@@ -85,6 +88,7 @@
                 android:textSize="18sp" />
 
         </LinearLayout>
+
 
 
     </LinearLayout>

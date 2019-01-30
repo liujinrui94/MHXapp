@@ -27,6 +27,7 @@ import com.ljr.hxapp.base.BaseActivity;
 import com.ljr.hxapp.base.Constant;
 import com.ljr.hxapp.bean.UserAccount;
 import com.ljr.hxapp.databinding.WebViewActBinding;
+import com.ljr.hxapp.rsa.encryption.utils.SPUtil;
 import com.ljr.hxapp.ui.JsToAndroid;
 import com.ljr.hxapp.utils.GsonUtil;
 import com.ljr.hxapp.utils.PermissionsManager;
@@ -142,8 +143,8 @@ public class WebViewActivity extends BaseActivity implements JsToAndroid.JsData 
     public void Into(String message) {
         final UserAccount userAccount = GsonUtil.GsonToBean(message, UserAccount.class);
         userAccount.setLogin(true);
-        Log.e("AAAA", message);
-        HXApplication.getInstance().setUserAccount(userAccount);
+        HXApplication.getInstance().setUserAccount(userAccount,true);
+        SPUtil.saveValue(SPUtil.getSp(getBaseContext(),Constant.SP_NAME),Constant.USER_INFO,GsonUtil.BeanToJson(userAccount));
         startActivity(new Intent(WebViewActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, userAccount.getGroupId()));
         finish();
     }
