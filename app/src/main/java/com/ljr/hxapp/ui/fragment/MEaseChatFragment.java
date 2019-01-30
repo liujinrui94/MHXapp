@@ -77,6 +77,7 @@ import com.ljr.hxapp.popuView.widget.Location;
 import com.ljr.hxapp.popuView.widget.PromptViewHelper;
 import com.ljr.hxapp.ui.activity.MineWebActivity;
 import com.ljr.hxapp.ui.activity.RemarkActivity;
+import com.ljr.hxapp.ui.activity.ShowPicAct;
 import com.ljr.hxapp.ui.activity.WebActivity;
 import com.ljr.hxapp.utils.ToastUtil;
 import com.ljr.hxapp.widget.CommonDialog;
@@ -394,7 +395,7 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
                     titleBar.setTitle(user.getNickname());
                 }
             }
-            titleBar.setRightImageResource(R.drawable.ease_mm_title_remove);
+//            titleBar.setRightImageResource(R.drawable.ease_mm_title_remove);
         } else {
             titleBar.setRightImageResource(R.drawable.ease_to_group_details_normal);
             if (chatType == EaseConstant.CHATTYPE_GROUP) {
@@ -681,6 +682,9 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
             @Override
             public boolean onBubbleClick(EMMessage message, View view) {
                 //气泡框点击事件，EaseUI有默认实现这个事件，如果需要覆盖，return值要返回true
+//                if (message.getType() == EMMessage.Type.IMAGE && !message.getFrom().equals(toChatUsername)) {
+//                    ShowPicAct.ShowPicActStart(getActivity(), message.getBody().toString());
+//                }
                 if (chatFragmentHelper == null) {
                     return false;
                 }
@@ -902,7 +906,6 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
 
             @Override
             public void onError(final int error, String errorMsg) {
-                // TODO Auto-generated method stub
                 EMLog.d(TAG, "join room failure : " + error);
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -1149,7 +1152,6 @@ public class MEaseChatFragment extends EaseBaseFragment implements EMMessageList
     protected EMCallBack messageStatusCallback = new EMCallBack() {
         @Override
         public void onSuccess() {
-            Log.e("EaseChatRowPresenter", "onSuccess: ");
             if (isMessageListInited) {
                 messageList.refresh();
             }

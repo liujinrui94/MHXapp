@@ -1,4 +1,4 @@
-package com.ljr.hxapp.utils;
+package com.hyphenate.easeui.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.Gravity;
 import android.widget.Toast;
-
-import com.ljr.hxapp.base.Constant;
 
 import java.io.BufferedInputStream;
 import java.io.File;

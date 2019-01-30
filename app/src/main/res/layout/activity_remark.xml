@@ -81,7 +81,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="@dimen/dp_50"
                 android:layout_marginRight="@dimen/dp_50"
-                android:background="@drawable/btn_background_5"
+                android:background="@drawable/btn_background"
                 android:onClick="@{viewCtrl.submit}"
                 android:text="确定"
                 android:textColor="@color/btn_white_normal"

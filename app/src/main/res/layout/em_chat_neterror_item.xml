@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_vertical"
+        android:visibility="gone"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView

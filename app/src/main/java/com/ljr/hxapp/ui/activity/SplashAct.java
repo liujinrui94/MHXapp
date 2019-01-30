@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ljr.hxapp.HXApplication;
 import com.ljr.hxapp.R;
@@ -21,12 +22,15 @@ import com.ljr.hxapp.bean.UserAccount;
 import com.ljr.hxapp.rsa.encryption.utils.ContextHolder;
 import com.ljr.hxapp.rsa.encryption.utils.SPUtil;
 import com.ljr.hxapp.utils.GsonUtil;
+import com.ljr.hxapp.utils.ToastUtil;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -82,7 +86,14 @@ public class SplashAct  extends BaseActivity {
         // 记录开始时间
         mStartTime = System.currentTimeMillis();
         // 初始化一些数据
-        somethingToDo();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
+        Long l1 = new Long(201902140000l);
+        if (Long.parseLong(sdf.format(Calendar.getInstance().getTime())) < l1) {
+            somethingToDo();
+        }else {
+            ToastUtil.showLongToast("请联系管理员升级最新版本");
+        }
     }
 
     private void somethingToDo() {

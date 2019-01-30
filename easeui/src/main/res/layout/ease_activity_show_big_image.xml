@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.hyphenate.easeui.widget.photoview.EasePhotoView
         android:id="@+id/image"
@@ -19,4 +19,13 @@
         android:visibility="gone" />
 
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/image_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:padding="10dp"
+        android:src="@drawable/down"
+        android:layout_gravity="end|bottom"
+        android:text="下载" />
+</FrameLayout>

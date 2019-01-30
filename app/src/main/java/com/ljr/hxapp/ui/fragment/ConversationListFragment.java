@@ -19,6 +19,7 @@ import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseDingMessageHelper;
 import com.hyphenate.easeui.ui.EaseConversationListFragment;
 import com.hyphenate.util.NetUtils;
+import com.ljr.hxapp.HXApplication;
 import com.ljr.hxapp.R;
 import com.ljr.hxapp.base.Constant;
 import com.ljr.hxapp.ui.activity.MChatActivity;
@@ -30,6 +31,12 @@ public class ConversationListFragment extends EaseConversationListFragment {
     @Override
     protected void initView() {
         super.initView();
+        if (HXApplication.getInstance().getUserAccount().getUserType().equals("1")){
+            isAdmin=false;
+        }else {
+            isAdmin=true;
+        }
+
         View errorView = (LinearLayout) View.inflate(getActivity(), R.layout.em_chat_neterror_item, null);
         errorItemContainer.addView(errorView);
         errorText = (TextView) errorView.findViewById(R.id.tv_connect_errormsg);
